@@ -19,6 +19,7 @@ class ComportamientoJugador : public Comportamiento{
       current_state.brujula = norte;
       last_action = actIDLE;
       girar_derecha = false;
+      bien_situado = false;
 
     }
 
@@ -34,6 +35,7 @@ class ComportamientoJugador : public Comportamiento{
   state current_state;
   Action last_action;
   bool girar_derecha;
+  bool bien_situado;
 };
 
 #endif

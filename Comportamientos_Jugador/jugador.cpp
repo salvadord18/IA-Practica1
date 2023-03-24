@@ -2,7 +2,11 @@
 #include <iostream>
 using namespace std;
 
-
+void PonerTerrenoEnMatriz(const vector<unsigned char> &terreno, const state &st, vector< vector< unsigned char> > &matriz){
+	// Extiende esta version inicial donde solo se pone la componente 0 en matriz
+	// a poner todas las componentes de terreno en función de la orientación del agente.
+	matriz[st.fil][st.col] = terreno[0];
+}
 
 Action ComportamientoJugador::think(Sensores sensores){
 
@@ -77,8 +81,20 @@ Action ComportamientoJugador::think(Sensores sensores){
 			break;
 	}
 
+	if(sensores.terreno[0] == 'G' and !bien_situado){
+		current_state.fil = sensores.posF;
+		current_state.col = sensores.posC;
+		current_state.brujula = sensores.sentido;
+		bien_situado = true;
+	}
+
+	if(bien_situado){
+		//mapaResultado[current_state.fil][current_state.col] = sensores.terreno[0];
+		PonerTerrenoEnMatriz(sensores.terreno, current_state, mapaResultado);
+	}
+
 	// Decidir la nueva acción
-	if((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S') and sensores.superficie[2] == '_'){
+	if((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or sensores.terreno[2] == 'G') and sensores.superficie[2] == '_'){
 		accion = actFORWARD;
 	} else if(!girar_derecha){
 		accion = actTURN_SL;
