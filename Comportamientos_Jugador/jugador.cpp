@@ -43,17 +43,19 @@ Action ComportamientoJugador::think(Sensores sensores){
 	// Actualización de las variables de estado
 	switch (last_action){
 		case actFORWARD:
-			// Actualización en caso de avanzar
-			switch(current_state.brujula){
-				case norte: current_state.fil--; break;
-				case noreste: current_state.fil--; current_state.col++; break;
-				case este: current_state.col++; break;
-				case sureste: current_state.fil++; current_state.col++; break;
-				case sur: current_state.fil++; break;
-				case suroeste: current_state.fil++; current_state.col--; break;
-				case oeste: current_state.col--; break;
-				case noroeste: current_state.fil--; current_state.col--; break;
-      		}		
+			if(!sensores.colision){
+				// Actualización en caso de avanzar
+				switch(current_state.brujula){
+					case norte: current_state.fil--; break;
+					case noreste: current_state.fil--; current_state.col++; break;
+					case este: current_state.col++; break;
+					case sureste: current_state.fil++; current_state.col++; break;
+					case sur: current_state.fil++; break;
+					case suroeste: current_state.fil++; current_state.col--; break;
+					case oeste: current_state.col--; break;
+					case noroeste: current_state.fil--; current_state.col--; break;
+      			}
+			}		
 			break;
 		case actTURN_SL:
 			// Actualización en caso de girar 45º a la izquierda
@@ -81,7 +83,11 @@ Action ComportamientoJugador::think(Sensores sensores){
 			break;
 	}
 
-	if(sensores.terreno[0] == 'G' and !bien_situado){
+	if(sensores.nivel == 1 and !bien_situado){
+		current_state.brujula = sensores.sentido;
+	}
+
+	if((sensores.terreno[0] == 'G' or sensores.nivel == 0) and !bien_situado){
 		current_state.fil = sensores.posF;
 		current_state.col = sensores.posC;
 		current_state.brujula = sensores.sentido;
@@ -94,7 +100,12 @@ Action ComportamientoJugador::think(Sensores sensores){
 	}
 
 	// Decidir la nueva acción
-	if((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or sensores.terreno[2] == 'G') and sensores.superficie[2] == '_'){
+	if((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or 
+	    sensores.terreno[2] == 'G' or sensores.terreno[2] == 'D' or 
+		sensores.terreno[2] == 'K' or sensores.terreno[2] == 'X' or 
+		(sensores.terreno[2] == 'B' and zapatillas) or 
+		(sensores.terreno[2] == 'A' and bikini) and 
+		sensores.superficie[2] == '_')){
 		accion = actFORWARD;
 	} else if(!girar_derecha){
 		accion = actTURN_SL;
@@ -102,6 +113,12 @@ Action ComportamientoJugador::think(Sensores sensores){
 	} else {
 		accion = actTURN_SR;
 		girar_derecha = (rand()%2 == 0);
+	}
+
+	if(sensores.terreno[0] == 'D' and !zapatillas){
+		zapatillas = true;
+	} else if(sensores.terreno[0] == 'K' and !bikini){
+		bikini = true;
 	}
 
 	// Recordar la ultima accion
