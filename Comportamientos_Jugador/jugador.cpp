@@ -2,16 +2,14 @@
 #include <iostream>
 using namespace std;
 
-void PonerTerrenoEnMatriz(const vector<unsigned char> &terreno, const state &st, vector< vector< unsigned char> > &matriz){
-	// Extiende esta version inicial donde solo se pone la componente 0 en matriz
-	// a poner todas las componentes de terreno en función de la orientación del agente.
-	matriz[st.fil][st.col] = terreno[0];
-}
-
 Action ComportamientoJugador::think(Sensores sensores){
 
 	Action accion = actIDLE;
 	int a;
+	
+	if(sensores.reset){
+		reset();
+	}
 
 	cout << "Posicion: fila " << sensores.posF << " columna " << sensores.posC << " ";
 	switch(sensores.sentido){
@@ -55,7 +53,7 @@ Action ComportamientoJugador::think(Sensores sensores){
 					case oeste: current_state.col--; break;
 					case noroeste: current_state.fil--; current_state.col--; break;
       			}
-			}		
+			};		
 			break;
 		case actTURN_SL:
 			// Actualización en caso de girar 45º a la izquierda
@@ -96,6 +94,7 @@ Action ComportamientoJugador::think(Sensores sensores){
 
 	if(bien_situado){
 		//mapaResultado[current_state.fil][current_state.col] = sensores.terreno[0];
+		//incluirMapa();
 		PonerTerrenoEnMatriz(sensores.terreno, current_state, mapaResultado);
 	}
 
@@ -121,9 +120,113 @@ Action ComportamientoJugador::think(Sensores sensores){
 		bikini = true;
 	}
 
+	int bosque = 100;
+	if (zapatillas){
+		bosque = 5;
+	}
+
+	int agua = 100;
+	if(bikini){
+		agua = 5;
+	}
+
+	int precipicio = 100;
+	int suelo = 5;
+	int muro = 200;
+
+	int posicion = 5;
+	if(!bien_situado){
+		posicion = -300;
+	}
+
+	int recarga = 5;
+	if(sensores.bateria < 3000){
+		recarga = -300;
+	}
+
+	int bikini = -300;
+	if(bikini){
+		bikini = 5;
+	}
+
 	// Recordar la ultima accion
 	last_action = accion;
 	return accion;
+}
+
+void ComportamientoJugador::PonerTerrenoEnMatriz(const vector<unsigned char> &terreno, const state &st, vector< vector< unsigned char> > &matriz){
+	// Extiende esta version inicial donde solo se pone la componente 0 en matriz
+	// a poner todas las componentes de terreno en función de la orientación del agente.
+	matriz[st.fil][st.col] = terreno[0];
+
+/*
+	if(st.fil < 0 || st.fil >= matriz.size() || st.col < 0 || st.col >= matriz[0].size()){
+	return;
+}
+
+if(terreno.size() != matriz[0].size()){
+	return;
+}
+	switch(st.brujula){
+		case norte: 
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil - i][st.col] = terreno[i];
+			}
+			break;
+		case noreste:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil - i][st.col + i] = terreno[i];
+			}
+		case este:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil][st.col + i] = terreno[i];
+			}
+			break;
+		case sureste:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil + i][st.col + i] = terreno[i];
+			}
+			break;
+		case sur:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil + i][st.col] = terreno[i];
+			}
+			break;
+		case suroeste:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil + i][st.col - i] = terreno[i];
+			}
+			break;
+		case oeste:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil][st.col - i] = terreno[i];
+			}
+			break;
+		case noroeste:
+			for (int i =0 ; i < terreno.size(); i++){
+				matriz[st.fil - i][st.col - i] = terreno[i];
+			}
+			break;
+	}*/
+}
+
+/*void ComportamientoJugador::incluirMapa(){
+	for(int i = 0; i < 2 * MAX; i++){
+		for(int j = 0; j < 2 * MAX; j++){
+			if(mapaAux[i][j] != '?'){
+				mapaResultado[fil + (i - auxFil)][col + (j - auxCol)] = mapaAux[i][j];
+			}
+		}
+	}
+}*/
+
+void ComportamientoJugador::reset(){
+	current_state.brujula = norte;
+	current_state.col = current_state.fil = 99;
+	girar_derecha = false;
+	bien_situado = false;
+	zapatillas = bikini = false;
+	last_action = actIDLE;
 }
 
 int ComportamientoJugador::interact(Action accion, int valor){
