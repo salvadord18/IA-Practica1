@@ -7,6 +7,7 @@ Action ComportamientoJugador::think(Sensores sensores){
 	Action accion = actIDLE;
 	int a;
 	
+	// Aquí se hace el reset del juego
 	if(sensores.reset){
 		reset();
 	}
@@ -157,69 +158,55 @@ Action ComportamientoJugador::think(Sensores sensores){
 void ComportamientoJugador::PonerTerrenoEnMatriz(const vector<unsigned char> &terreno, const state &st, vector< vector< unsigned char> > &matriz){
 	// Extiende esta version inicial donde solo se pone la componente 0 en matriz
 	// a poner todas las componentes de terreno en función de la orientación del agente.
-	matriz[st.fil][st.col] = terreno[0];
+	
 
-/*
-	if(st.fil < 0 || st.fil >= matriz.size() || st.col < 0 || st.col >= matriz[0].size()){
-	return;
-}
-
-if(terreno.size() != matriz[0].size()){
-	return;
-}
-	switch(st.brujula){
-		case norte: 
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil - i][st.col] = terreno[i];
-			}
-			break;
-		case noreste:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil - i][st.col + i] = terreno[i];
-			}
-		case este:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil][st.col + i] = terreno[i];
-			}
-			break;
-		case sureste:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil + i][st.col + i] = terreno[i];
-			}
-			break;
+	switch(current_state.brujula){
 		case sur:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil + i][st.col] = terreno[i];
-			}
-			break;
-		case suroeste:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil + i][st.col - i] = terreno[i];
-			}
-			break;
-		case oeste:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil][st.col - i] = terreno[i];
-			}
-			break;
-		case noroeste:
-			for (int i =0 ; i < terreno.size(); i++){
-				matriz[st.fil - i][st.col - i] = terreno[i];
-			}
-			break;
-	}*/
+			// Casillas a delante 
+			matriz[st.fil][st.col] = terreno[0];
+			matriz[st.fil + 1][st.col] = terreno[2];
+			matriz[st.fil + 2][st.col] = terreno[6];
+			matriz[st.fil + 3][st.col] = terreno[12];
+
+			// Casillas a la izquierda
+			matriz[st.fil + 1][st.col - 1] = terreno[1];
+			matriz[st.fil + 2][st.col - 1] = terreno[5];
+			matriz[st.fil + 3][st.col - 1] = terreno[11];
+			matriz[st.fil + 2][st.col - 2] = terreno[4];
+			matriz[st.fil + 3][st.col - 2] = terreno[10];
+			matriz[st.fil + 3][st.col - 3] = terreno[9];
+
+			// Casillas a la derecha
+			matriz[st.fil + 1][st.col + 1] = terreno[3];
+			matriz[st.fil + 2][st.col + 1] = terreno[7];
+			matriz[st.fil + 3][st.col + 1] = terreno[13];
+			matriz[st.fil + 2][st.col + 2] = terreno[8];
+			matriz[st.fil + 3][st.col + 2] = terreno[14];
+			matriz[st.fil + 3][st.col + 3] = terreno[15];
+		break;
+
+		case noreste:
+			matriz[st.fil][st.col + 1] = terreno[0];
+			matriz[st.fil + 1][st.col + 1] = terreno[1];
+			matriz[st.fil + 1][st.col + 2] = terreno[2];
+			matriz[st.fil][st.col + 2] = terreno[3];
+			matriz[st.fil + 2][st.col + 1] = terreno[4];
+			matriz[st.fil + 2][st.col + 2] = terreno[5];
+			matriz[st.fil + 2][st.col + 3] = terreno[6];
+			matriz[st.fil + 1][st.col + 3] = terreno[7];
+			matriz[st.fil][st.col + 3] = terreno[8];
+			matriz[st.fil + 3][st.col + 1] = terreno[9];
+			matriz[st.fil + 3][st.col + 2] = terreno[10];
+			matriz[st.fil + 3][st.col + 3] = terreno[11];
+			matriz[st.fil + 3][st.col + 4] = terreno[12];
+			matriz[st.fil + 2][st.col + 4] = terreno[13];
+			matriz[st.fil + 1][st.col + 4] = terreno[14];
+			matriz[st.fil][st.col + 4] = terreno[15];
+		break;
+	}
 }
 
-/*void ComportamientoJugador::incluirMapa(){
-	for(int i = 0; i < 2 * MAX; i++){
-		for(int j = 0; j < 2 * MAX; j++){
-			if(mapaAux[i][j] != '?'){
-				mapaResultado[fil + (i - auxFil)][col + (j - auxCol)] = mapaAux[i][j];
-			}
-		}
-	}
-}*/
-
+// La función reset pondrá todos los valores a los iniciales
 void ComportamientoJugador::reset(){
 	current_state.brujula = norte;
 	current_state.col = current_state.fil = 99;
