@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "iosfwd": "cpp",
+<<<<<<< HEAD
         "iostream": "cpp"
+=======
+        "ostream": "cpp"
+>>>>>>> 3df2973164d3acdb7747a463d5c4bc4bc41a4c2d
     }
 }
