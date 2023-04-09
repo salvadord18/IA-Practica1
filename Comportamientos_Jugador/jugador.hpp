@@ -32,6 +32,7 @@ class ComportamientoJugador : public Comportamiento{
     void PonerTerrenoEnMatriz(const vector<unsigned char> &terreno, const state &st, vector< vector< unsigned char> > &matriz);
     bool esObstaculo(unsigned char casilla);
     bool hayObstaculoDelante(state &st);
+    int gastosBateria(Action accion, Sensores sensores);
     void reset();
   private:
   
