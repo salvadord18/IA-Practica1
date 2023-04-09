@@ -37,7 +37,6 @@ Action ComportamientoJugador::think(Sensores sensores){
 	cout << "Reset: " << sensores.reset << endl;
 	cout << "Vida: " << sensores.vida << endl;
 	cout << endl;
-	
 
 	// Actualización de las variables de estado
 	switch (last_action){
@@ -97,7 +96,7 @@ Action ComportamientoJugador::think(Sensores sensores){
 	if(bien_situado){
 		PonerTerrenoEnMatriz(sensores.terreno, current_state, mapaResultado);
 	}
-
+	
 	// Decidir la nueva acción
 	if((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or 
 	    sensores.terreno[2] == 'G' or sensores.terreno[2] == 'D' or 

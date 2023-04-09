@@ -30,8 +30,6 @@ class ComportamientoJugador : public Comportamiento{
     Action think(Sensores sensores);
     int interact(Action accion, int valor);
     void PonerTerrenoEnMatriz(const vector<unsigned char> &terreno, const state &st, vector< vector< unsigned char> > &matriz);
-    bool hayObstaculo(Sensores sensores);
-    bool hayAldeanoLobo(Sensores sensores);
     int gastosBateria(Action accion, Sensores sensores);
     void reset();
   private:
