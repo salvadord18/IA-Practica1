@@ -93,6 +93,7 @@ Action ComportamientoJugador::think(Sensores sensores){
 		bien_situado = true;
 	}
 
+	// Aquí se pone el terreno en matriz de lo que ha descubierto el agente
 	if(bien_situado){
 		PonerTerrenoEnMatriz(sensores.terreno, current_state, mapaResultado);
 	}
@@ -307,78 +308,6 @@ void ComportamientoJugador::PonerTerrenoEnMatriz(const vector<unsigned char> &te
 					break;
 				}
 		}
-
-
-// Función para verificar si hay algún obstaculo
-bool ComportamientoJugador::esObstaculo(unsigned char casilla){
-	if(casilla == 'P' or casilla == 'M'){
-		return true;
-	} else {
-		return false;
-	}
-}
-
-// Verifica si la casilla a delante es un obstaculo
-bool ComportamientoJugador::hayObstaculoDelante(state &st){
-	int fil = st.fil;
-	int col = st.col;
-
-	switch (st.brujula){
-	
-	case norte:
-		fil--;
-		break;
-	
-	case noreste:
-		fil--;
-		col++;
-		break;
-	
-	case este:
-		col++;
-		break;
-
-	case sureste:
-		fil++;
-		col++;
-		break;
-
-	case sur:
-		fil++;
-		break;
-
-	case suroeste:
-		fil++;
-		col--;
-		break;
-
-	case oeste:
-		col--;
-		break;
-
-	case noroeste:
-		fil--;
-		col--;
-		break;
-	}
-
-	// Verificación de los rangos del mapa
-	if (fil < 0 or fil >= mapaResultado.size()){
-		return true;
-	}
-	if(col < 0 or col >= mapaResultado[0].size()){
-		return true;
-	}
-
-	// Comprobar el tipo de obstaculo
-	if(!esObstaculo(mapaResultado[fil][col])){
-		st.fil = fil;
-		st.col = col;
-		return false;
-	} else {
-		return true;
-	}
-}
 
 int ComportamientoJugador::gastosBateria(Action accion, Sensores sensores){
 	int bateria = sensores.bateria;
